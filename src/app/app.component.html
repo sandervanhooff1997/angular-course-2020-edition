@@ -1,0 +1,26 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+    <router-outlet></router-outlet>
+
+    <!-- below are two different approaches to structural directives
+    <app-recipes *ngIf="loadedFeature == 'recipe'"></app-recipes>
+    <ng-template [ngIf]="loadedFeature == 'shopping-list'">
+      <app-shopping-list></app-shopping-list>
+    </ng-template> -->
+  </div>
+  <!-- <p appBasicHighlight>Style me with basic directive!</p> -->
+  <!-- <p appBetterHighlight [defaultColor]="'yellow'" highLightColor="'red'">
+    Style me with better directive!
+  </p> -->
+
+  <!-- custom structural directive -->
+  <!-- <p *appUnless="1 > 2">test</p> -->
+
+  <!-- ng switch -->
+  <!-- <div [ngSwitch]="switchValue">
+    <p *ngSwitchCase="10">Value is 10</p>
+    <p *ngSwitchCase="20">Value is 20</p>
+    <p *ngSwitchDefault>Value is default</p>
+  </div> -->
+</div>
