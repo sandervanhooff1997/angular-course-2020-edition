@@ -10,6 +10,7 @@ import { RecipeDetailComponent } from '@components/recipes/recipe-detail/recipe-
 import { RecipeItemComponent } from '@components/recipes/recipe-list/recipe-item/recipe-item.component';
 import { ShoppingListComponent } from '@components/shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from '@components/shopping-list/shopping-edit/shopping-edit.component';
+import { NotFoundComponent } from '@components/not-found/not-found.component';
 
 // directives
 import { BasicHighlightDirective } from './directives/basic-highlight.directive';
@@ -20,7 +21,6 @@ import { DropdownDirective } from './directives/dropdown.directive';
 // routes
 import appRoutes from '@app/router/app.routes';
 import { RouterModule } from '@angular/router';
-import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -33,13 +33,13 @@ import { NotFoundComponent } from './not-found/not-found.component';
     RecipeItemComponent,
     ShoppingListComponent,
     ShoppingEditComponent,
+    NotFoundComponent,
 
     // directives
     BasicHighlightDirective,
     BetterHighlightDirective,
     UnlessDirective,
-    DropdownDirective,
-    NotFoundComponent
+    DropdownDirective
   ],
   imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
   providers: [],
