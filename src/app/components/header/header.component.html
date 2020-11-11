@@ -6,9 +6,19 @@
 
     <div class="navbar-default">
       <ul class="nav navbar-nav">
-        <li><a routerLink="/recipes">Recipes</a></li>
-        <li>
-          <a [routerLink]="'/shopping-list'">Shopping List</a>
+        <!-- use routerLinkActiveOptions if this route should only be active on the exact path match
+        <li
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <a [routerLink]="['/home', 5, 'test']"
+            [queryParams]="{allowEdit: 1}"
+            [fragment]="['fragment1']">Home</a>
+        </li>
+         -->
+        <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/shopping-list']">Shopping List</a>
         </li>
       </ul>
       <ul class="nav navbar navbar-nav navbar-right">

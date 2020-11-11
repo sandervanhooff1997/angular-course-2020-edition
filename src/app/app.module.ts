@@ -18,8 +18,9 @@ import { UnlessDirective } from './directives/unless.directive';
 import { DropdownDirective } from './directives/dropdown.directive';
 
 // routes
-import appRoutes from '@app/routes/app.routes';
+import appRoutes from '@app/router/app.routes';
 import { RouterModule } from '@angular/router';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { RouterModule } from '@angular/router';
     BasicHighlightDirective,
     BetterHighlightDirective,
     UnlessDirective,
-    DropdownDirective
+    DropdownDirective,
+    NotFoundComponent
   ],
   imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
   providers: [],
