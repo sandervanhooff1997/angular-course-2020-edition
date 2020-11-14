@@ -1,28 +1,50 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Ingredient } from '@models/ingredient.model';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingListService {
-  shoppingListChanged = new EventEmitter<Ingredient[]>();
+  /**
+   * * use a subject instead of an Angular event emitter
+   * * main advantage: you can trigger observable.next() from outside (the observer) e.g. from a button click
+   * * also more lightweight
+   */
+  ingredientsChanged = new Subject<Ingredient[]>();
+  startedEditing = new Subject<number>();
 
-  private shoppingList: Ingredient[] = [
+  private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
     new Ingredient('Tomatoes', 10)
   ];
 
   constructor() {}
 
-  getShoppingList() {
-    return this.shoppingList.slice();
+  getIngredients() {
+    this.ingredientsChanged.next();
+    return this.ingredients.slice();
+  }
+
+  getIngredient(index: number) {
+    return this.ingredients.slice()[index];
   }
 
   addIngredient(i: Ingredient) {
-    this.shoppingList.push(i);
-    this.shoppingListChanged.emit(this.shoppingList.slice());
+    this.ingredients.push(i);
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
 
   addIngredients(i: Ingredient[]) {
-    this.shoppingList.push(...i);
-    this.shoppingListChanged.emit(this.shoppingList.slice());
+    this.ingredients.push(...i);
+    this.ingredientsChanged.next(this.ingredients.slice());
+  }
+
+  updateIngredient(index: number, updated: Ingredient) {
+    this.ingredients[index] = updated;
+    this.ingredientsChanged.next(this.ingredients.slice());
+  }
+
+  deleteIngredient(index: number) {
+    this.ingredients.splice(index, 1);
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
 }

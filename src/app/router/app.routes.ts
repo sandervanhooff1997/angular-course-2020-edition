@@ -1,9 +1,13 @@
 import { Routes } from '@angular/router';
 import { RecipeListComponent } from '@components/recipes/recipe-list/recipe-list.component';
 import { ShoppingListComponent } from '@components/shopping-list/shopping-list.component';
-import { NotFoundComponent } from '@components/not-found/not-found.component';
+import { ErrorPageComponent } from '@components/error/error-page.component';
 import { AuthGuardService } from '@services/guards/auth-guard.service';
 import { CanDeactivateGuard } from '@services/guards/can-deactivate-guard.service';
+import { RecipeDetailComponent } from '@components/recipes/recipe-detail/recipe-detail.component';
+import { RecipesComponent } from '@components/recipes/recipes.component';
+import { RecipeStartComponent } from '@components/recipes/recipe-start/recipe-start.component';
+import { RecipeEditComponent } from '@components/recipes/recipe-edit/recipe-edit.component';
 
 const routes: Routes = [
   {
@@ -13,7 +17,25 @@ const routes: Routes = [
   },
   {
     path: 'recipes',
-    component: RecipeListComponent
+    component: RecipesComponent,
+    children: [
+      {
+        path: '',
+        component: RecipeStartComponent
+      },
+      {
+        path: 'new',
+        component: RecipeEditComponent
+      },
+      {
+        path: ':id',
+        component: RecipeDetailComponent
+      },
+      {
+        path: ':id/edit',
+        component: RecipeEditComponent
+      }
+    ]
   },
   {
     path: 'shopping-list',
@@ -24,7 +46,11 @@ const routes: Routes = [
   },
   {
     path: 'not-found',
-    component: NotFoundComponent
+    component: ErrorPageComponent,
+    // pass static data to a route
+    data: {
+      message: '404 - Page not found!'
+    }
   },
   {
     path: '**',
