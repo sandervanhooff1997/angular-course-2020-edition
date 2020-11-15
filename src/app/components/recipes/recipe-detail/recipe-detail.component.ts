@@ -30,7 +30,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     // subscribe as this is a child route, and ngOnInit only gets called once
     this.route.params.subscribe((params: Params) => {
       this.id = +params['id']; // cast string to int
-      this.recipe = this.recipeService.getRecipeById(this.id);
+      this.recipe = this.recipeService.getRecipe(this.id);
     });
 
     // this.firstObserverSubscription = interval(1000).subscribe(count => console.log(count));

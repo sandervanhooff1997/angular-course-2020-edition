@@ -1,0 +1,5 @@
+// * use ng-touched to prevent a red border from the beginning
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 1px solid red;
+}

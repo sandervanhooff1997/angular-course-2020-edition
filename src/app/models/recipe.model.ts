@@ -2,7 +2,6 @@ import { Ingredient } from './ingredient.model';
 
 export class Recipe {
   constructor(
-    public id: number,
     public name: string,
     public description: string,
     public imagePath: string,
@@ -13,4 +12,9 @@ export class Recipe {
     this.imagePath = imagePath;
     this.ingredients = ingredients;
   }
+
+  // * a toString in typescript
+  public toString = (): string => {
+    return `Recipe ${this.name} (${this.ingredients.length} Ingredients)`;
+  };
 }
