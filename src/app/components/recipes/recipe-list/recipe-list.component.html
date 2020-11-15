@@ -8,7 +8,20 @@
 <hr />
 <div class="row">
   <div class="col-xs-12">
+    <label for="filter">Filter recipes</label>
+    <input
+      type="text"
+      id="filter"
+      class="form-control"
+      placeholder="Enter text"
+      style="margin-bottom: 10px;"
+      [(ngModel)]="filterText"
+    />
     <!-- <app-recipe-detail *ngIf="recipe" [recipe]="recipe"></app-recipe-detail> -->
-    <app-recipe-item *ngFor="let r of recipes; let i = index" [recipe]="r" [index]="i"></app-recipe-item>
+    <app-recipe-item
+      *ngFor="let r of recipes | filter: filterText:'name'; let i = index"
+      [recipe]="r"
+      [index]="i"
+    ></app-recipe-item>
   </div>
 </div>

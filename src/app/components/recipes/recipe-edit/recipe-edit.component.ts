@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Params, ActivatedRoute } from '@angular/router';
+import { Params, ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '@models/recipe.model';
 import { RecipeService } from '@services/recipe.service';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
@@ -17,6 +17,7 @@ export class RecipeEditComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private recipeService: RecipeService
   ) {}
 
@@ -82,6 +83,10 @@ export class RecipeEditComponent implements OnInit {
     this.ingredientControls.removeAt(index);
   }
 
+  onClearIngredients() {
+    this.ingredientControls.clear();
+  }
+
   onSubmit() {
     /**
      * * if the value names of our form have the exactly the same names as our Recipe model,
@@ -100,6 +105,12 @@ export class RecipeEditComponent implements OnInit {
     } else {
       this.recipeService.addRecipe(this.recipeForm.value);
     }
+
+    this.back();
+  }
+
+  back() {
+    this.router.navigate(['../']);
   }
 
   get ingredientControls() {

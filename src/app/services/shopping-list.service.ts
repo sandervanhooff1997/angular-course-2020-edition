@@ -29,21 +29,25 @@ export class ShoppingListService {
 
   addIngredient(i: Ingredient) {
     this.ingredients.push(i);
-    this.ingredientsChanged.next(this.getIngredients());
+    this.notifyShoppingListChanged();
   }
 
   addIngredients(i: Ingredient[]) {
     this.ingredients.push(...i);
-    this.ingredientsChanged.next(this.getIngredients());
+    this.notifyShoppingListChanged();
   }
 
   updateIngredient(index: number, updated: Ingredient) {
     this.ingredients[index] = updated;
-    this.ingredientsChanged.next(this.getIngredients());
+    this.notifyShoppingListChanged();
   }
 
   deleteIngredient(index: number) {
     this.ingredients.splice(index, 1);
+    this.notifyShoppingListChanged();
+  }
+
+  notifyShoppingListChanged() {
     this.ingredientsChanged.next(this.getIngredients());
   }
 }

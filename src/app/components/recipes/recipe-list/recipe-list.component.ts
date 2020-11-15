@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   recipesChangedSub: Subscription;
+  filterText: string;
 
   constructor(
     private recipeService: RecipeService,

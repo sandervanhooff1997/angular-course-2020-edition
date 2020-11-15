@@ -24,6 +24,8 @@ import appRoutes from '@app/router/app.routes';
 import { RouterModule } from '@angular/router';
 import { RecipeStartComponent } from '@components/recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from '@components/recipes/recipe-edit/recipe-edit.component';
+import { ShortenPipe } from './pipes/shorten.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -37,14 +39,14 @@ import { RecipeEditComponent } from '@components/recipes/recipe-edit/recipe-edit
     ShoppingListComponent,
     ShoppingEditComponent,
     ErrorPageComponent,
-
-    // directives
     BasicHighlightDirective,
     BetterHighlightDirective,
     UnlessDirective,
     DropdownDirective,
     RecipeStartComponent,
-    RecipeEditComponent
+    RecipeEditComponent,
+    ShortenPipe,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
