@@ -36,6 +36,7 @@ import appRoutes from '@app/router/app.routes';
 // interceptors
 import { HttpInterceptorService } from '@services/interceptors/http-interceptor.service';
 import { AuthInterceptorService } from '@services/interceptors/auth-interceptor.service';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { AuthInterceptorService } from '@services/interceptors/auth-interceptor.
     FilterPipe,
     SigninComponent,
     SignupComponent,
-    LoaderComponent
+    LoaderComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,14 @@
 <div class="container">
   <app-loader *ngIf="loading"></app-loader>
-  <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+  <!-- <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
     {{ errorMessage }}
-  </div>
+  </div> -->
+  <app-alert
+    [message]="errorMessage"
+    [duration]="3"
+    (close)="onCloseAlert()"
+    *ngIf="errorMessage"
+  ></app-alert>
   <div class="row" *ngIf="!loading">
     <div class="col-xs-12">
       <form #f="ngForm" (ngSubmit)="onSubmit(f)">

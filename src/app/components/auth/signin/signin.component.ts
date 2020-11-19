@@ -34,9 +34,10 @@ export class SigninComponent implements OnInit {
       )
       .add(() => {
         this.loading = false;
-        setTimeout(() => {
-          this.errorMessage = '';
-        }, 3000);
       });
+  }
+
+  onCloseAlert() {
+    this.errorMessage = '';
   }
 }
