@@ -15,6 +15,9 @@ import { tap } from 'rxjs/operators';
  */
 export class HttpInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
+    // * prevent firebase authentication to fail
+    if (req.url.startsWith('https://')) return next.handle(req);
+
     const url = 'https://angular-course-2020-6811d.firebaseio.com/';
     req = req.clone({
       url: url + req.url

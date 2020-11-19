@@ -29,9 +29,10 @@ import { FilterPipe } from './pipes/filter.pipe';
 
 // routes
 import appRoutes from '@app/router/app.routes';
-import { HttpInterceptorService } from '@services/http-interceptor.service';
+import { HttpInterceptorService } from '@services/interceptors/http-interceptor.service';
 import { SignupComponent } from './components/auth/signup/signup.component';
 import { SigninComponent } from '@components/auth/signin/signin.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { SigninComponent } from '@components/auth/signin/signin.component';
     ShortenPipe,
     FilterPipe,
     SigninComponent,
-    SignupComponent
+    SignupComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
