@@ -30,6 +30,8 @@ import { FilterPipe } from './pipes/filter.pipe';
 // routes
 import appRoutes from '@app/router/app.routes';
 import { HttpInterceptorService } from '@services/http-interceptor.service';
+import { SignupComponent } from './components/auth/signup/signup.component';
+import { SigninComponent } from '@components/auth/signin/signin.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { HttpInterceptorService } from '@services/http-interceptor.service';
     RecipeStartComponent,
     RecipeEditComponent,
     ShortenPipe,
-    FilterPipe
+    FilterPipe,
+    SigninComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +65,11 @@ import { HttpInterceptorService } from '@services/http-interceptor.service';
   ],
   providers: [
     {
-      // this token can be added to any interceptor service to tell angular to call the intercept method whenever a request leaves the application
+      /**
+       * ! interceptors get executed in the order you provide them here
+       * * adding HTTP_INTERCEPTORS tag tells angular to call
+       * * the intercept method whenever a request leaves the application
+       * */
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true // use multiple interceptors

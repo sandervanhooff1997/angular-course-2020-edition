@@ -4,7 +4,7 @@
   routerLinkActive="active"
 >
   <div class="pull-left">
-    <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
+    <h4 class="list-group-item-heading">{{ recipe.name | shorten: 20 }}</h4>
     <p class="list-group-item-text">{{ recipe.description | shorten: 20 }}</p>
     <p class="list-group-item-text">
       {{ recipe.createdAt | date: "MM.dd.yyyy" }}

@@ -11,15 +11,15 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class ShoppingListComponent
   implements OnInit, CanComponentDeactivate, OnDestroy {
-  ingredients: Ingredient[];
+  ingredients: Ingredient[] = [];
   editting: boolean = true;
-  shoppingListObservable: Subscription;
+  shoppingListSub: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit(): void {
     this.ingredients = this.shoppingListService.getIngredients();
-    this.shoppingListObservable = this.shoppingListService.ingredientsChanged.subscribe(
+    this.shoppingListSub = this.shoppingListService.ingredientsChanged.subscribe(
       (ingredients: Ingredient[]) => (this.ingredients = ingredients)
     );
   }
@@ -29,12 +29,12 @@ export class ShoppingListComponent
     else return confirm('u sure?');
   }
 
-  onEditItem(index: number) {
-    this.shoppingListService.startedEditing.next(index);
+  deleteIngredient(id: string) {
+    this.shoppingListService.deleteIngredient(id);
   }
 
   ngOnDestroy() {
     // * make sure to unsubscribe!
-    this.shoppingListObservable.unsubscribe();
+    this.shoppingListSub.unsubscribe();
   }
 }

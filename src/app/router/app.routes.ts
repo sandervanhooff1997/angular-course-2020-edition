@@ -8,6 +8,11 @@ import { RecipeDetailComponent } from '@components/recipes/recipe-detail/recipe-
 import { RecipesComponent } from '@components/recipes/recipes.component';
 import { RecipeStartComponent } from '@components/recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from '@components/recipes/recipe-edit/recipe-edit.component';
+import { RecipesResolverService } from '@services/resolvers/recipes-resolver.service';
+import { ShoppingListResolverService } from '@services/resolvers/shopping-list-resolver.service';
+import { ShoppingEditComponent } from '@components/shopping-list/shopping-edit/shopping-edit.component';
+import { SigninComponent } from '@components/auth/signin/signin.component';
+import { SignupComponent } from '@components/auth/signup/signup.component';
 
 const routes: Routes = [
   {
@@ -17,6 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'recipes',
+    resolve: [RecipesResolverService],
     component: RecipesComponent,
     children: [
       {
@@ -29,20 +35,42 @@ const routes: Routes = [
       },
       {
         path: ':id',
+        resolve: [RecipesResolverService],
         component: RecipeDetailComponent
       },
       {
         path: ':id/edit',
+        resolve: [RecipesResolverService],
         component: RecipeEditComponent
       }
     ]
   },
   {
     path: 'shopping-list',
+    resolve: [ShoppingListResolverService],
     canActivate: [AuthGuardService], // protect this route and all child routes with the AuthGuard service
     // canActivateChild: [AuthGuardService], // protect all child routes with the AuthGuard service
     canDeactivate: [CanDeactivateGuard],
-    component: ShoppingListComponent
+    component: ShoppingListComponent,
+    children: [
+      {
+        path: 'new',
+        component: ShoppingEditComponent
+      },
+      {
+        path: ':id/edit',
+        resolve: [ShoppingListResolverService],
+        component: ShoppingEditComponent
+      }
+    ]
+  },
+  {
+    path: 'signup',
+    component: SignupComponent
+  },
+  {
+    path: 'signin',
+    component: SigninComponent
   },
   {
     path: 'not-found',

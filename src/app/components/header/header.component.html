@@ -21,14 +21,17 @@
           <a [routerLink]="['/shopping-list']">Shopping List</a>
         </li>
       </ul>
+
       <ul class="nav navbar navbar-nav navbar-right">
         <li class="dropdown" appDropdown>
-          <a href="#" class="dropdown-toggle" role="button" appDropdown
-            >Manage <span class="caret"></span
+          <a class="dropdown-toggle" role="button" appDropdown
+            >Account <span class="caret"></span
           ></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Save Data</a></li>
-            <li><a href="#">Fetch Data</a></li>
+            <li><a [routerLink]="['/signin']">Account</a></li>
+            <li><a [routerLink]="['/signin']">Sign In</a></li>
+            <li><a [routerLink]="['/signup']">Sign Up</a></li>
+            <li><a [routerLink]="['/signup']">Logout</a></li>
           </ul>
         </li>
       </ul>

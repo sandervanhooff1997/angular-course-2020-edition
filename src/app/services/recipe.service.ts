@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from '@models/recipe.model';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -15,52 +15,54 @@ export class RecipeService {
 
   constructor(private http: HttpClient) {}
 
-  getRecipes() {
-    return this.http.get('recipes.json').pipe(
+  fetchRecipes() {
+    return this.http.get<Recipe[]>('recipes.json').pipe(
       map(responseData => {
-        // * transform the response with a observable pipe
         const arr: Recipe[] = [];
-        for (const key in responseData)
-          if (responseData.hasOwnProperty(key))
-            arr.push({ ...responseData[key], id: key });
+        for (const key in responseData) {
+          // * transform the response with a observable pipe
+          if (responseData.hasOwnProperty(key)) {
+            let r = { ...responseData[key], id: key };
+            if (!r.ingredients) r.ingredients = []; // always add ingredients array to prevent errors
+            arr.push(r);
+          }
+        }
 
+        this.recipes = arr;
+        this.notifyRecipesChanged();
         return arr;
       })
     );
   }
 
+  getRecipes() {
+    return this.recipes.slice();
+  }
+
   getRecipe(id: string) {
-    return this.http.get('recipes/' + id + '.json');
+    return this.recipes.find(r => r.id === id);
   }
 
   addRecipe(r: Recipe) {
-    this.http.post('recipes.json', r).subscribe(res => {
-      this.getRecipes().subscribe(recipes => {
-        this.recipes = recipes;
-        this.notifyRecipesChanged();
-      });
+    console.log(r);
+    this.http.post('recipes.json', r).subscribe(() => {
+      this.fetchRecipes().subscribe();
     });
   }
 
   updateRecipe(id: string, updated: Recipe) {
-    this.http.put('recipes/' + id + '.json', updated).subscribe(() =>
-      this.getRecipes().subscribe(recipes => {
-        this.recipes = recipes;
-        this.notifyRecipesChanged();
-      })
-    );
+    this.http.put('recipes/' + id + '.json', updated).subscribe(() => {
+      this.fetchRecipes().subscribe();
+    });
   }
 
   deleteRecipe(id: string) {
-    return this.http.delete('recipes/' + id + '.json').subscribe(() =>
-      this.getRecipes().subscribe(recipes => {
-        this.recipes = recipes;
-        this.notifyRecipesChanged();
-      })
-    );
+    return this.http.delete('recipes/' + id + '.json').subscribe(() => {
+      this.fetchRecipes().subscribe();
+    });
   }
 
-  private notifyRecipesChanged() {
-    this.recipesChanged.next(this.recipes.slice());
+  notifyRecipesChanged() {
+    this.recipesChanged.next(this.getRecipes());
   }
 }

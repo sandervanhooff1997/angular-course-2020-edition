@@ -22,8 +22,8 @@ export class HttpInterceptorService implements HttpInterceptor {
     return next.handle(req).pipe(
       tap(event => {
         // * you can also intercept the response by subscribing to the observable returned from next.handle()
-        if (event.type === HttpEventType.Response)
-          console.log('A response arrived safely', event.body);
+        // if (event.type === HttpEventType.Response)
+        //   console.log('A response arrived safely', event.body);
       })
     );
   }

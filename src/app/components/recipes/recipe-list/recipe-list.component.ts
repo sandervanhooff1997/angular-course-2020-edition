@@ -22,15 +22,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.isFetching = true;
-    this.recipeService.getRecipes().subscribe(recipes => {
-      this.isFetching = false;
-      this.recipes = recipes;
-    });
+    // recipes are fetched by the route resolver before loading this component
+    this.recipes = this.recipeService.getRecipes();
 
     this.recipesChangedSub = this.recipeService.recipesChanged.subscribe(
       (recipes: Recipe[]) => {
-        this.isFetching = false;
         this.recipes = recipes;
       }
     );

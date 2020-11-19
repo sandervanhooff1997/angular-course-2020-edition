@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Ingredient } from '@models/ingredient.model';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingListService {
@@ -10,41 +12,61 @@ export class ShoppingListService {
    * * also more lightweight
    */
   ingredientsChanged = new Subject<Ingredient[]>();
-  startedEditing = new Subject<number>();
+  private ingredients: Ingredient[] = [];
 
-  private ingredients: Ingredient[] = [
-    new Ingredient('Apples', 5),
-    new Ingredient('Tomatoes', 10)
-  ];
+  constructor(private http: HttpClient) {}
 
-  constructor() {}
+  fetchIngredients() {
+    return this.http.get<Ingredient[]>('shopping-list.json').pipe(
+      map(responseData => {
+        const arr: Ingredient[] = [];
+        for (const key in responseData) {
+          // * transform the response with a observable pipe
+          if (responseData.hasOwnProperty(key)) {
+            let r = { ...responseData[key], id: key };
+            arr.push(r);
+          }
+        }
+
+        this.ingredients = arr;
+        this.notifyShoppingListChanged();
+        return arr;
+      })
+    );
+  }
 
   getIngredients() {
     return this.ingredients.slice();
   }
 
-  getIngredient(index: number) {
-    return this.ingredients.slice()[index];
+  getIngredient(id: string) {
+    return this.ingredients.find(i => i.id === id);
   }
 
   addIngredient(i: Ingredient) {
-    this.ingredients.push(i);
-    this.notifyShoppingListChanged();
+    this.http.post('shopping-list.json', i).subscribe(() => {
+      this.fetchIngredients().subscribe();
+    });
   }
 
   addIngredients(i: Ingredient[]) {
-    this.ingredients.push(...i);
-    this.notifyShoppingListChanged();
+    this.http
+      .put('shopping-list.json', [...this.ingredients, ...i])
+      .subscribe(() => {
+        this.fetchIngredients().subscribe();
+      });
   }
 
-  updateIngredient(index: number, updated: Ingredient) {
-    this.ingredients[index] = updated;
-    this.notifyShoppingListChanged();
+  updateIngredient(id: string, updated: Ingredient) {
+    this.http.put('shopping-list/' + id + '.json', updated).subscribe(() => {
+      this.fetchIngredients().subscribe();
+    });
   }
 
-  deleteIngredient(index: number) {
-    this.ingredients.splice(index, 1);
-    this.notifyShoppingListChanged();
+  deleteIngredient(id: string) {
+    return this.http.delete('shopping-list/' + id + '.json').subscribe(() => {
+      this.fetchIngredients().subscribe();
+    });
   }
 
   notifyShoppingListChanged() {

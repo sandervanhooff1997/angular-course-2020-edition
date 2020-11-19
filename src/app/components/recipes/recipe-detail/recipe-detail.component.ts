@@ -4,6 +4,7 @@ import { ShoppingListService } from '@services/shopping-list.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '@services/recipe.service';
 import { interval, Subscription, Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -32,11 +33,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
 
-      this.loading = true;
-      this.recipeService.getRecipe(this.id).subscribe(recipe => {
-        this.loading = false;
-        this.recipe = recipe;
-      });
+      this.recipe = this.recipeService.getRecipe(this.id);
     });
 
     // this.firstObserverSubscription = interval(1000).subscribe(count => console.log(count));
