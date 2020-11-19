@@ -3,6 +3,7 @@ import { Params, ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '@models/recipe.model';
 import { RecipeService } from '@services/recipe.service';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { Ingredient } from '@models/ingredient.model';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -10,7 +11,7 @@ import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
-  id: number;
+  id: string;
   editMode: boolean = false;
   recipe: Recipe;
   recipeForm: FormGroup;
@@ -23,7 +24,7 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = +params['id'];
+      this.id = params['id'];
       this.editMode = params['id'] != null; // determine edit mode
       this.initForm();
     });
@@ -36,28 +37,51 @@ export class RecipeEditComponent implements OnInit {
     let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
-      let r = this.recipeService.getRecipe(this.id);
-      recipeName = r.name;
-      recipeImagePath = r.imagePath;
-      recipeDescription = r.description;
+      this.recipeService.getRecipe(this.id).subscribe(r => {
+        console.log(r);
+        recipeName = r.name;
+        recipeImagePath = r.imagePath;
+        recipeDescription = r.description;
 
-      // fill all ingredients if any
-      if (r.ingredients) {
-        for (let ingredient of r.ingredients) {
-          recipeIngredients.push(
-            // * create a new FormGroup because each ingredient holds multiple FormControls that belong to a single FormGroup
-            new FormGroup({
-              name: new FormControl(ingredient.name, Validators.required),
-              amount: new FormControl(ingredient.amount, [
-                Validators.required,
-                Validators.pattern(/^[1-9]+[0-9]*$/) // regex to only allow numbers > 0
-              ])
-            })
-          );
+        // fill all ingredients if any
+        if (r.ingredients) {
+          for (let ingredient of r.ingredients) {
+            recipeIngredients.push(
+              // * create a new FormGroup because each ingredient holds multiple FormControls that belong to a single FormGroup
+              new FormGroup({
+                name: new FormControl(ingredient.name, Validators.required),
+                amount: new FormControl(ingredient.amount, [
+                  Validators.required,
+                  Validators.pattern(/^[1-9]+[0-9]*$/) // regex to only allow numbers > 0
+                ])
+              })
+            );
+          }
         }
-      }
+
+        this.createForm(
+          recipeName,
+          recipeImagePath,
+          recipeDescription,
+          recipeIngredients
+        );
+      });
     }
 
+    this.createForm(
+      recipeName,
+      recipeImagePath,
+      recipeDescription,
+      recipeIngredients
+    );
+  }
+
+  private createForm(
+    recipeName: string,
+    recipeImagePath: string,
+    recipeDescription: string,
+    recipeIngredients: FormArray
+  ) {
     // * Create the parent FormGroup holding all child FormGroups & FormControls
     this.recipeForm = new FormGroup({
       name: new FormControl(recipeName, Validators.required),
@@ -65,6 +89,11 @@ export class RecipeEditComponent implements OnInit {
       description: new FormControl(recipeDescription, Validators.required),
       ingredients: recipeIngredients
     });
+  }
+
+  onDelete() {
+    this.recipeService.deleteRecipe(this.id);
+    this.back();
   }
 
   onAddIngredient() {

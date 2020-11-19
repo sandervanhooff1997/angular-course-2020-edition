@@ -18,10 +18,17 @@
       [(ngModel)]="filterText"
     />
     <!-- <app-recipe-detail *ngIf="recipe" [recipe]="recipe"></app-recipe-detail> -->
-    <app-recipe-item
+    <!-- <app-recipe-item
       *ngFor="let r of recipes | filter: filterText:'name'; let i = index"
       [recipe]="r"
       [index]="i"
-    ></app-recipe-item>
+    ></app-recipe-item> -->
+    <div *ngIf="recipes.length && !isFetching">
+      <app-recipe-item
+        *ngFor="let r of recipes | filter: filterText:'name'; let i = index"
+        [recipe]="r"
+      ></app-recipe-item>
+    </div>
+    <p *ngIf="isFetching">Loading...</p>
   </div>
 </div>

@@ -1,12 +1,14 @@
 import { Ingredient } from './ingredient.model';
 
 export class Recipe {
+  public createdAt: Date;
+  public id?: string;
+
   constructor(
     public name: string,
     public description: string,
     public imagePath: string,
-    public ingredients: Ingredient[],
-    public createdAt: Date
+    public ingredients: Ingredient[]
   ) {
     this.name = name;
     this.description = description;
