@@ -16,6 +16,9 @@ import { ShoppingEditComponent } from '@components/shopping-list/shopping-edit/s
 import { ErrorPageComponent } from '@components/error/error-page.component';
 import { RecipeStartComponent } from '@components/recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from '@components/recipes/recipe-edit/recipe-edit.component';
+import { SignupComponent } from './components/auth/signup/signup.component';
+import { SigninComponent } from '@components/auth/signin/signin.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 // directives
 import { BasicHighlightDirective } from './directives/basic-highlight.directive';
@@ -29,10 +32,10 @@ import { FilterPipe } from './pipes/filter.pipe';
 
 // routes
 import appRoutes from '@app/router/app.routes';
+
+// interceptors
 import { HttpInterceptorService } from '@services/interceptors/http-interceptor.service';
-import { SignupComponent } from './components/auth/signup/signup.component';
-import { SigninComponent } from '@components/auth/signin/signin.component';
-import { LoaderComponent } from './components/loader/loader.component';
+import { AuthInterceptorService } from '@services/interceptors/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -75,6 +78,11 @@ import { LoaderComponent } from './components/loader/loader.component';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true // use multiple interceptors
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

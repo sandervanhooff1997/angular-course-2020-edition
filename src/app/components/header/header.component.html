@@ -16,8 +16,10 @@
             [fragment]="['fragment1']">Home</a>
         </li>
          -->
-        <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
-        <li routerLinkActive="active">
+        <li routerLinkActive="active" *ngIf="isAuthenticated">
+          <a routerLink="/recipes">Recipes</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="isAuthenticated">
           <a [routerLink]="['/shopping-list']">Shopping List</a>
         </li>
       </ul>
@@ -25,13 +27,17 @@
       <ul class="nav navbar navbar-nav navbar-right">
         <li class="dropdown" appDropdown>
           <a class="dropdown-toggle" role="button" appDropdown
-            >Account <span class="caret"></span
+            >{{ isAuthenticated ? (user.email | shorten: 20) : "Account" }}
+            <span class="caret"></span
           ></a>
           <ul class="dropdown-menu">
-            <li><a [routerLink]="['/signin']">Account</a></li>
-            <li><a [routerLink]="['/signin']">Sign In</a></li>
-            <li><a [routerLink]="['/signup']">Sign Up</a></li>
-            <li><a [routerLink]="['/signup']">Logout</a></li>
+            <li>
+              <a [routerLink]="['/signin']" *ngIf="!isAuthenticated">Sign In</a>
+            </li>
+            <li>
+              <a [routerLink]="['/signup']" *ngIf="!isAuthenticated">Sign Up</a>
+            </li>
+            <li><a (click)="onLogout()" *ngIf="isAuthenticated">Logout</a></li>
           </ul>
         </li>
       </ul>

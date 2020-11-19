@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpRequest,
-  HttpHandler,
-  HttpEventType
+  HttpHandler
 } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,7 @@ import { AuthService } from '@services/auth.service';
 export class SignupComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string;
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -32,6 +33,7 @@ export class SignupComponent implements OnInit {
       .subscribe(
         res => {
           form.reset();
+          this.router.navigate(['/signin']);
         },
         err => (this.errorMessage = err)
       )

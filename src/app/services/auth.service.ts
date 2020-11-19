@@ -1,30 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { EmailValidator } from '@angular/forms';
 import { AuthResponseData } from '@models/interfaces/auth-response-data.interface';
-import { map, catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { AuthErrors } from '@models/enums/auth-error-codes.enum';
 import { User } from '@models/user/user.model';
-import { Subject, throwError } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  loggedIn = true;
-  // provided bij google firebase
-  private apiKey: string = 'AIzaSyC2p-KuBM-BJ2DfWNf7YhzCKLXQuvmPKrM';
-  user = new Subject<User>();
+  private readonly localStorageKey = 'userData'; // the key name used to store the user in localStorage
+  private readonly apiKey: string = 'AIzaSyC2p-KuBM-BJ2DfWNf7YhzCKLXQuvmPKrM'; // provided bij google firebase
+  private tokenExpirationTimer: any; // a timer that auto logs out the user when the session is expired (1 hour on firebase)
 
-  constructor(private http: HttpClient) {}
+  // * BehaviorSubject will enable you to always use the last emitted data by .next() instead of heaving to subscribe
+  user = new BehaviorSubject<User>(null);
 
-  isAuthenticated() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.loggedIn);
-      }, 800);
-    });
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   signin(email: string, password: string) {
     return this.http
@@ -37,7 +31,12 @@ export class AuthService {
           returnSecureToken: true
         }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap(res =>
+          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn)
+        )
+      );
   }
 
   signup(
@@ -56,7 +55,59 @@ export class AuthService {
           returnSecureToken: true
         }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap(res =>
+          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn)
+        )
+      );
+  }
+
+  // * this method is called by the app component (at startup)
+  autoSignin() {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem(this.localStorageKey));
+    if (!userData) return;
+
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+
+    // check the token validity through the getter user.token
+    if (loadedUser.token) {
+      this.user.next(loadedUser);
+
+      // * calculate difference in milliseconds between futere date (expiration) and current date
+      const expiresIn =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
+
+      this.autoLogout(expiresIn);
+    }
+  }
+
+  private handleUser(
+    email: string,
+    userId: string,
+    idToken: string,
+    expiresIn: number
+  ) {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(email, userId, idToken, expirationDate);
+
+    // call subject
+    this.user.next(user);
+    this.autoLogout(expiresIn * 1000); // seconds to milliseconds (firebase to setTimeout)
+
+    // store user to localStorage (to prevent user from being signedout on page refresh)
+    localStorage.setItem(this.localStorageKey, JSON.stringify(user));
   }
 
   private handleError(res: HttpErrorResponse) {
@@ -77,6 +128,16 @@ export class AuthService {
   }
 
   logout() {
-    this.loggedIn = false;
+    this.user.next(null);
+    localStorage.removeItem(this.localStorageKey);
+    if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
+
+    this.router.navigate(['/signin']);
+  }
+
+  autoLogout(duration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, duration);
   }
 }

@@ -13,6 +13,7 @@ import { ShoppingListResolverService } from '@services/resolvers/shopping-list-r
 import { ShoppingEditComponent } from '@components/shopping-list/shopping-edit/shopping-edit.component';
 import { SigninComponent } from '@components/auth/signin/signin.component';
 import { SignupComponent } from '@components/auth/signup/signup.component';
+import { UnAuthGuardService } from '@services/guards/unauth-guard.service';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
   {
     path: 'recipes',
     resolve: [RecipesResolverService],
+    canActivate: [AuthGuardService],
     component: RecipesComponent,
     children: [
       {
@@ -66,10 +68,12 @@ const routes: Routes = [
   },
   {
     path: 'signup',
+    canActivate: [UnAuthGuardService],
     component: SignupComponent
   },
   {
     path: 'signin',
+    canActivate: [UnAuthGuardService],
     component: SigninComponent
   },
   {
