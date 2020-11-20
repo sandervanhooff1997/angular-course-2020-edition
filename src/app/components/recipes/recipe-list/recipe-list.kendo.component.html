@@ -3,7 +3,6 @@
     <button class="btn btn-success" (click)="onNewRecipe()">
       New Recipe
     </button>
-    <p>test</p>
   </div>
 </div>
 <hr />
@@ -12,13 +11,6 @@
     <kendo-grid
       [kendoGridBinding]="recipes"
       [height]="410"
-      [pageable]="{
-        buttonCount: buttonCount,
-        info: info,
-        type: type,
-        pageSizes: [5, 10, 20],
-        previousNext: previousNext
-      }"
       [sortable]="true"
       [groupable]="true"
       [filterable]="true"
