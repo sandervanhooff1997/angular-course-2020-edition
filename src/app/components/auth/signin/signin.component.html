@@ -5,7 +5,7 @@
   </div> -->
   <app-alert
     [message]="errorMessage"
-    [duration]="3"
+    [type]="'error'"
     (close)="onCloseAlert()"
     *ngIf="errorMessage"
   ></app-alert>

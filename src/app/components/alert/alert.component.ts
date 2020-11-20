@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AlertType } from '@models/enums/alert-type.enum';
+import { NotificationService } from '@progress/kendo-angular-notification';
 
 @Component({
   selector: 'app-alert',
@@ -7,25 +9,26 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class AlertComponent implements OnInit {
   @Input() message: string;
-  @Input() duration?: number; // duration in seconds
+  @Input() type: AlertType = AlertType.info;
+  @Input() duration: number = 3000; // duration in seconds
   @Output() close = new EventEmitter<void>();
-  private timer: any;
+
+  constructor(private notificationService: NotificationService) {}
 
   ngOnInit() {
-    // auto close
-    if (this.duration) {
-      // auto close and display the remaining duration
-      this.timer = setInterval(() => {
-        if (this.duration - 1 > 0) this.duration--;
-        else {
-          clearInterval(this.timer);
-          this.onClose();
-        }
-      }, 1000);
-    }
-  }
+    const notification = this.notificationService.show({
+      content: this.message,
+      cssClass: 'button-notification',
+      animation: { type: 'slide', duration: 400 },
+      position: { horizontal: 'center', vertical: 'bottom' },
+      type: { style: this.type, icon: true },
+      closable: true
+    });
 
-  onClose() {
-    this.close.emit();
+    setTimeout(() => {
+      notification.hide();
+    }, this.duration);
+
+    notification.afterHide.subscribe(() => this.close.emit());
   }
 }

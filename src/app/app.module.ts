@@ -37,6 +37,14 @@ import appRoutes from '@app/router/app.routes';
 import { HttpInterceptorService } from '@services/interceptors/http-interceptor.service';
 import { AuthInterceptorService } from '@services/interceptors/auth-interceptor.service';
 import { AlertComponent } from './components/alert/alert.component';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
+import { NotificationModule } from '@progress/kendo-angular-notification';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -68,7 +76,11 @@ import { AlertComponent } from './components/alert/alert.component';
     RouterModule.forRoot(appRoutes),
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ButtonsModule,
+    BrowserAnimationsModule,
+    DialogsModule,
+    NotificationModule
   ],
   providers: [
     {
