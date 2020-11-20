@@ -1,8 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AlertComponent } from './components/alert/alert.component';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
+import { NotificationModule } from '@progress/kendo-angular-notification';
+import { TreeListModule } from '@progress/kendo-angular-treelist';
+import { GridModule } from '@progress/kendo-angular-grid';
 
 // components
 import { AppComponent } from './app.component';
@@ -36,15 +43,6 @@ import appRoutes from '@app/router/app.routes';
 // interceptors
 import { HttpInterceptorService } from '@services/interceptors/http-interceptor.service';
 import { AuthInterceptorService } from '@services/interceptors/auth-interceptor.service';
-import { AlertComponent } from './components/alert/alert.component';
-import { ButtonsModule } from '@progress/kendo-angular-buttons';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DialogsModule } from '@progress/kendo-angular-dialog';
-import { NotificationModule } from '@progress/kendo-angular-notification';
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -80,7 +78,9 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     ButtonsModule,
     BrowserAnimationsModule,
     DialogsModule,
-    NotificationModule
+    NotificationModule,
+    TreeListModule,
+    GridModule
   ],
   providers: [
     {

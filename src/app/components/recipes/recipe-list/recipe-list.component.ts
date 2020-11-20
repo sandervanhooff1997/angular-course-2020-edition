@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-list',
-  templateUrl: './recipe-list.component.html',
+  templateUrl: './recipe-list.kendo.component.html',
   styleUrls: ['./recipe-list.component.css']
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
@@ -14,6 +14,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   recipesChangedSub: Subscription;
   filterText: string;
   isFetching: boolean = false;
+  public gridData: any[] = null;
 
   constructor(
     private recipeService: RecipeService,
@@ -28,6 +29,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipesChangedSub = this.recipeService.recipesChanged.subscribe(
       (recipes: Recipe[]) => {
         this.recipes = recipes;
+        console.log(this.recipes);
       }
     );
   }

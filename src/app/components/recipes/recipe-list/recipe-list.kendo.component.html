@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-xs-12">
+    <button class="btn btn-success" (click)="onNewRecipe()">
+      New Recipe
+    </button>
+    <p>test</p>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <kendo-grid
+      [kendoGridBinding]="recipes"
+      [height]="410"
+      [pageable]="{
+        buttonCount: buttonCount,
+        info: info,
+        type: type,
+        pageSizes: [5, 10, 20],
+        previousNext: previousNext
+      }"
+      [sortable]="true"
+      [groupable]="true"
+      [filterable]="true"
+      [pageSize]="10"
+    >
+      <kendo-grid-column field="name"></kendo-grid-column>
+      <kendo-grid-column field="description">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.description | shorten: 10 }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="createdAt">
+        <!-- <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="customer-photo" [ngStyle]="{ backgroundImage: getUrl(dataItem.CustomerID) }"></div>
+                <div class="customer-name">
+                    {{ dataItem.ContactName }}
+                </div>
+            </ng-template> -->
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.createdAt | date: "MM.dd.yyyy" }}
+        </ng-template>
+      </kendo-grid-column>
+    </kendo-grid>
+  </div>
+</div>
