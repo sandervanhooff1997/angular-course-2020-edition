@@ -1,6 +1,13 @@
 <app-header></app-header>
 <div class="container">
   <div class="row">
+    <app-alert
+      *ngIf="alert"
+      [message]="alert.message"
+      [duration]="alert.duration"
+      [type]="alert.type"
+      (close)="onCloseAlert()"
+    ></app-alert>
     <router-outlet></router-outlet>
     <!-- below are two different approaches to structural directives
     <app-recipes *ngIf="loadedFeature == 'recipe'"></app-recipes>

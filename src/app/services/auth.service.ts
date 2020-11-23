@@ -2,10 +2,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthErrors } from '@models/enums/auth-error-codes.enum';
-import { AuthResponseData } from '@models/interfaces/auth-response-data.interface';
+import { IAuthResponseData } from '@models/interfaces/auth-response-data.interface';
 import { User } from '@models/user/user.model';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { AlertService } from './alert.service';
+import { AlertType } from '@models/enums/alert-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +20,15 @@ export class AuthService {
   // * BehaviorSubject will enable you to always use the last emitted data by .next() instead of heaving to subscribe
   user = new BehaviorSubject<User>(null);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private alertService: AlertService
+  ) {}
 
   signin(email: string, password: string) {
     return this.http
-      .post<AuthResponseData>(
+      .post<IAuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
           this.apiKey,
         {
@@ -33,15 +39,20 @@ export class AuthService {
       )
       .pipe(
         catchError(this.handleError),
-        tap(res =>
-          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn)
-        )
+        tap(res => {
+          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn);
+
+          this.alertService.broadcast({
+            message: 'Welcome back, ' + res.email + '.',
+            type: AlertType.success
+          });
+        })
       );
   }
 
   signup(email: string, password: string) {
     return this.http
-      .post<AuthResponseData>(
+      .post<IAuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
           this.apiKey,
         {
@@ -54,6 +65,11 @@ export class AuthService {
         catchError(this.handleError),
         tap(res => {
           this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn);
+
+          this.alertService.broadcast({
+            message: 'Welcome, ' + res.email + '.',
+            type: AlertType.success
+          });
         })
       );
   }
@@ -118,6 +134,11 @@ export class AuthService {
       case AuthErrors.EMAIL_EXISTS:
         return throwError('This E-mail is already in use.');
     }
+
+    this.alertService.broadcast({
+      message: res.message,
+      type: AlertType.error
+    });
 
     return throwError(res.message);
   }

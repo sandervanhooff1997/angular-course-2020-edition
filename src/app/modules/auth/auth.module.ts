@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 
 import routes from './auth.routes';
 import { SharedModule } from '@modules/shared/shared.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SigninComponent, SignupComponent],
-  imports: [SharedModule, RouterModule.forChild(routes)],
+  imports: [SharedModule, RouterModule.forChild(routes), FormsModule],
   exports: [RouterModule]
 })
 export class AuthModule {}

@@ -1,18 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@services/auth.service';
+import { IAlert } from '@models/interfaces/alert.interface';
+import { AlertService } from '@services/alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'recipes';
   switchValue: number = 5;
+  alert: IAlert;
+  alertSub: Subscription;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit() {
     this.authService.autoSignin();
+
+    this.alertSub = this.alertService.alert.subscribe(alert => {
+      this.alert = alert;
+    });
+  }
+
+  onCloseAlert() {
+    this.alert = null;
+  }
+
+  ngOnDestroy() {
+    this.alertSub.unsubscribe();
   }
 }

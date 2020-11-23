@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class SigninComponent implements OnInit {
   loading: boolean = false;
-  errorMessage: string;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -30,14 +29,10 @@ export class SigninComponent implements OnInit {
           form.reset();
           this.router.navigate(['/']);
         },
-        err => (this.errorMessage = err)
+        err => {}
       )
       .add(() => {
         this.loading = false;
       });
-  }
-
-  onCloseAlert() {
-    this.errorMessage = '';
   }
 }

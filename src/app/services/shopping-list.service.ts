@@ -3,6 +3,8 @@ import { Ingredient } from '@models/ingredient.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { AlertService } from './alert.service';
+import { AlertType } from '@models/enums/alert-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingListService {
@@ -14,7 +16,7 @@ export class ShoppingListService {
   ingredientsChanged = new Subject<Ingredient[]>();
   private ingredients: Ingredient[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   fetchIngredients() {
     return this.http.get<Ingredient[]>('shopping-list.json').pipe(
@@ -46,6 +48,11 @@ export class ShoppingListService {
   addIngredient(i: Ingredient) {
     this.http.post('shopping-list.json', i).subscribe(() => {
       this.fetchIngredients().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Ingredient added to shopping list.',
+        type: AlertType.success
+      });
     });
   }
 
@@ -54,18 +61,33 @@ export class ShoppingListService {
       .put('shopping-list.json', [...this.ingredients, ...i])
       .subscribe(() => {
         this.fetchIngredients().subscribe();
+
+        this.alertService.broadcast({
+          message: 'Ingredients added to shopping list.',
+          type: AlertType.success
+        });
       });
   }
 
   updateIngredient(id: string, updated: Ingredient) {
     this.http.put('shopping-list/' + id + '.json', updated).subscribe(() => {
       this.fetchIngredients().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Ingredient updated.',
+        type: AlertType.success
+      });
     });
   }
 
   deleteIngredient(id: string) {
     return this.http.delete('shopping-list/' + id + '.json').subscribe(() => {
       this.fetchIngredients().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Recipe deleted.',
+        type: AlertType.success
+      });
     });
   }
 

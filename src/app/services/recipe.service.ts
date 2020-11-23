@@ -3,6 +3,8 @@ import { Recipe } from '@models/recipe.model';
 import { Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { AlertService } from './alert.service';
+import { AlertType } from '@models/enums/alert-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class RecipeService {
 
   private recipes: Recipe[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   fetchRecipes() {
     return this.http.get<Recipe[]>('recipes.json').pipe(
@@ -44,21 +46,35 @@ export class RecipeService {
   }
 
   addRecipe(r: Recipe) {
-    console.log(r);
     this.http.post('recipes.json', r).subscribe(() => {
       this.fetchRecipes().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Recipe added.',
+        type: AlertType.success
+      });
     });
   }
 
   updateRecipe(id: string, updated: Recipe) {
     this.http.put('recipes/' + id + '.json', updated).subscribe(() => {
       this.fetchRecipes().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Recipe updated.',
+        type: AlertType.success
+      });
     });
   }
 
   deleteRecipe(id: string) {
     return this.http.delete('recipes/' + id + '.json').subscribe(() => {
       this.fetchRecipes().subscribe();
+
+      this.alertService.broadcast({
+        message: 'Recipe deleted.',
+        type: AlertType.success
+      });
     });
   }
 

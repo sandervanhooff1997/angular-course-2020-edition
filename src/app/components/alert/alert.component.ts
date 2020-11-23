@@ -10,12 +10,14 @@ import { NotificationService } from '@progress/kendo-angular-notification';
 export class AlertComponent implements OnInit {
   @Input() message: string;
   @Input() type: AlertType = AlertType.info;
-  @Input() duration: number = 3000; // duration in seconds
+  @Input() duration: number; // duration in seconds
   @Output() close = new EventEmitter<void>();
 
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit() {
+    if (!this.duration) this.duration = 3000;
+
     const notification = this.notificationService.show({
       content: this.message,
       cssClass: 'button-notification',

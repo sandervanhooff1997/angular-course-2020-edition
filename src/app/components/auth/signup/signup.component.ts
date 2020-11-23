@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
+import { AlertService } from '@services/alert.service';
+import { AlertType } from '@models/enums/alert-type.enum';
 
 @Component({
   selector: 'app-signup',
@@ -10,8 +12,11 @@ import { AuthService } from '@services/auth.service';
 })
 export class SignupComponent implements OnInit {
   loading: boolean = false;
-  errorMessage: string;
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -23,7 +28,10 @@ export class SignupComponent implements OnInit {
     const password2 = form.value.password2;
 
     if (password != password2) {
-      this.errorMessage = "Passwords don't match.";
+      this.alertService.broadcast({
+        message: "Passwords don't match.",
+        type: AlertType.error
+      });
       return;
     }
 
@@ -35,13 +43,10 @@ export class SignupComponent implements OnInit {
           form.reset();
           this.router.navigate(['/signin']);
         },
-        err => (this.errorMessage = err)
+        err => {}
       )
       .add(() => {
         this.loading = false;
-        setTimeout(() => {
-          this.errorMessage = '';
-        }, 3000);
       });
   }
 }
