@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -29,7 +29,7 @@ export class SignupComponent implements OnInit {
 
     this.loading = true;
     this.authService
-      .signup(email, password, password2)
+      .signup(email, password)
       .subscribe(
         res => {
           form.reset();

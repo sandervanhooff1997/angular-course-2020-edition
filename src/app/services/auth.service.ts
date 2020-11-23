@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AuthResponseData } from '@models/interfaces/auth-response-data.interface';
-import { catchError, tap } from 'rxjs/operators';
-import { AuthErrors } from '@models/enums/auth-error-codes.enum';
-import { User } from '@models/user/user.model';
-import { throwError, BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthErrors } from '@models/enums/auth-error-codes.enum';
+import { AuthResponseData } from '@models/interfaces/auth-response-data.interface';
+import { User } from '@models/user/user.model';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,12 +39,7 @@ export class AuthService {
       );
   }
 
-  signup(
-    email: string,
-    password: string,
-    password2: string,
-    autoSignin: boolean = true
-  ) {
+  signup(email: string, password: string) {
     return this.http
       .post<AuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
@@ -57,9 +52,9 @@ export class AuthService {
       )
       .pipe(
         catchError(this.handleError),
-        tap(res =>
-          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn)
-        )
+        tap(res => {
+          this.handleUser(res.email, res.localId, res.idToken, +res.expiresIn);
+        })
       );
   }
 
