@@ -148,7 +148,7 @@ export class AuthService {
     localStorage.removeItem(this.localStorageKey);
     if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
 
-    this.router.navigate(['/signin']);
+    this.router.navigate(['/auth/signin']);
   }
 
   autoLogout(duration: number) {

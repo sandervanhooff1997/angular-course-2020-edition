@@ -39,7 +39,7 @@ export class UnAuthGuardService implements CanActivate, CanActivateChild {
         return true;
       })
       // this is the old way of doing it (this could cause a redirect loop in some use cases)
-      // tap(isAuthenticated => this.router.navigate(['/signin']))
+      // tap(isAuthenticated => this.router.navigate(['/auth/signin']))
     );
   }
 

@@ -1,8 +1,5 @@
 <div class="container">
   <app-loader *ngIf="loading"></app-loader>
-  <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
   <div class="row" *ngIf="!loading">
     <div class="col-xs-12">
       <form #f="ngForm" (ngSubmit)="onSubmit(f)">
@@ -45,7 +42,7 @@
 
         <div>
           <button class="btn btn-primary" type="submit">Sign Up</button> |
-          <a [routerLink]="['/signin']">or sign in...</a>
+          <a [routerLink]="['/auth/signin']">or sign in...</a>
         </div>
       </form>
     </div>

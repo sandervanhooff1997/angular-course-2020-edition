@@ -32,10 +32,10 @@
           ></a>
           <ul class="dropdown-menu">
             <li>
-              <a [routerLink]="['/signin']" *ngIf="!isAuthenticated">Sign In</a>
+              <a [routerLink]="['/auth/signin']" *ngIf="!isAuthenticated">Sign In</a>
             </li>
             <li>
-              <a [routerLink]="['/signup']" *ngIf="!isAuthenticated">Sign Up</a>
+              <a [routerLink]="['/auth/signup']" *ngIf="!isAuthenticated">Sign Up</a>
             </li>
             <li><a (click)="onLogout()" *ngIf="isAuthenticated">Logout</a></li>
           </ul>

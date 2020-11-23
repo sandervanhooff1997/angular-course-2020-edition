@@ -35,7 +35,7 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
         if (isAuthenticated) return true;
 
         // returning a urlTree is the safe way
-        return this.router.createUrlTree(['/signin']);
+        return this.router.createUrlTree(['/auth/signin']);
       })
       // this is the old way of doing it (this could cause a redirect loop in some use cases)
       // tap(isAuthenticated => this.router.navigate(['/signin']))

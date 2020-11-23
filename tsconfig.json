@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "module": "es2020",
+    "module": "esnext", // use "esnext" to support dynamic imports (used to lazy load angular modules via routes)
     "lib": ["es2018", "dom"],
     "paths": {
       "@components/*": ["src/app/components/*"],

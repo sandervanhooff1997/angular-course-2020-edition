@@ -7,7 +7,7 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'shopping-list',
+    path: '',
     resolve: [ShoppingListResolverService],
     canActivate: [AuthGuardService], // protect this route and all child routes with the AuthGuard service
     canActivateChild: [AuthGuardService], // protect all child routes with the AuthGuard service
