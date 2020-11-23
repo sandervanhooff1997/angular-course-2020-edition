@@ -8,13 +8,12 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AlertService } from './alert.service';
 import { AlertType } from '@models/enums/alert-type.enum';
+import { environment } from '@app/../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly localStorageKey = 'userData'; // the key name used to store the user in localStorage
-  private readonly apiKey: string = 'AIzaSyC2p-KuBM-BJ2DfWNf7YhzCKLXQuvmPKrM'; // provided bij google firebase
   private tokenExpirationTimer: any; // a timer that auto logs out the user when the session is expired (1 hour on firebase)
 
   // * BehaviorSubject will enable you to always use the last emitted data by .next() instead of heaving to subscribe
@@ -30,7 +29,7 @@ export class AuthService {
     return this.http
       .post<IAuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-          this.apiKey,
+          environment.firebaseAPIKey,
         {
           email,
           password,
@@ -54,7 +53,7 @@ export class AuthService {
     return this.http
       .post<IAuthResponseData>(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-          this.apiKey,
+          environment.firebaseAPIKey,
         {
           email,
           password,
@@ -81,7 +80,7 @@ export class AuthService {
       id: string;
       _token: string;
       _tokenExpirationDate: string;
-    } = JSON.parse(localStorage.getItem(this.localStorageKey));
+    } = JSON.parse(localStorage.getItem(environment.localStorageKey));
     if (!userData) return;
 
     const loadedUser = new User(
@@ -118,7 +117,7 @@ export class AuthService {
     this.autoLogout(expiresIn * 1000); // seconds to milliseconds (firebase to setTimeout)
 
     // store user to localStorage (to prevent user from being signedout on page refresh)
-    localStorage.setItem(this.localStorageKey, JSON.stringify(user));
+    localStorage.setItem(environment.localStorageKey, JSON.stringify(user));
   }
 
   private handleError(res: HttpErrorResponse) {
@@ -145,7 +144,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    localStorage.removeItem(this.localStorageKey);
+    localStorage.removeItem(environment.localStorageKey);
     if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
 
     this.router.navigate(['/auth/signin']);
